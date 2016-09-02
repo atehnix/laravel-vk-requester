@@ -111,6 +111,7 @@ class Send implements ShouldQueue
     {
         $status = isset($this->response['error_code']) ? VkRequest::STATUS_FAIL : VkRequest::STATUS_SUCCESS;
         $event  = sprintf(VkRequest::EVENT_FORMAT, $status, $this->request->method, $this->request->tag);
+
         event($event, [$this->request, $this->response]);
     }
 }

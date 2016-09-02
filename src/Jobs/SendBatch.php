@@ -69,6 +69,7 @@ class SendBatch implements ShouldQueue
     {
         $this->requests = $requests;
         $this->token    = (string)$token;
+
         VkRequest::whereIn('id', $requests->pluck('id')->all())->delete();
     }
 
