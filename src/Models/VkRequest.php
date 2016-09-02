@@ -12,12 +12,12 @@ namespace ATehnix\LaravelVkRequester\Models;
 /**
  * Class VkRequest
  *
- * @property int $id
+ * @property int    $id
  * @property string $method
- * @property array $parameters
+ * @property array  $parameters
  * @property string $token
  * @property string $tag
- * @property array $context
+ * @property array  $context
  */
 class VkRequest extends \Eloquent
 {

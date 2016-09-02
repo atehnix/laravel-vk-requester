@@ -22,8 +22,8 @@ class VkRequesterServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([__DIR__.'/../publish/config/' => config_path()], 'config');
-        $this->publishes([__DIR__.'/../publish/database/' => database_path('migrations')], 'database');
+        $this->publishes([__DIR__ . '/../publish/config/' => config_path()], 'config');
+        $this->publishes([__DIR__ . '/../publish/database/' => database_path('migrations')], 'database');
 
         if (config('vk-requester.auto_dispatch', true)) {
             $this->app->booted(function () {
@@ -43,12 +43,8 @@ class VkRequesterServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(Auth::class, function () {
-            return new Auth(
-                config('services.vkontakte.client_id'),
-                config('services.vkontakte.client_secret'),
-                config('services.vkontakte.redirect'),
-                config('vk-requester.scope')
-            );
+            return new Auth(config('services.vk.client_id'), config('services.vk.client_secret'), config('services.vk.redirect'),
+                config('vk-requester.scope'));
         });
 
         $this->commands([VkRequesterGeneratorCommand::class]);

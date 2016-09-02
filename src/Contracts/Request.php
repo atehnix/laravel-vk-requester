@@ -33,16 +33,17 @@ abstract class Request extends VkRequest
      * Get or set value of parameter
      *
      * @param string $key
-     * @param null $newValue
+     * @param null   $value
+     *
      * @return mixed
      */
-    public function parameter(string $key, $newValue = null)
+    public function parameter(string $key, $value = null)
     {
-        if (func_num_args() >= 2) {
-            $this->parameters = array_merge($this->parameters, [$key => $newValue]);
+        if (!empty($value)) {
+            $this->parameters = array_merge($this->parameters, [$key => $value,]);
         }
 
-        return isset($this->parameters[$key]) ? $this->parameters[$key] : null;
+        return $this->parameters[$key];
     }
 
     /**
@@ -52,10 +53,8 @@ abstract class Request extends VkRequest
      */
     public function setParametersAttribute(array $parameters)
     {
-        $defaultParameters = $this->getDefaultParameters();
-        $this->attributes['parameters'] = json_encode(
-            array_merge($defaultParameters, $parameters)
-        );
+        $defaultParameters              = $this->getDefaultParameters();
+        $this->attributes['parameters'] = json_encode(array_merge($defaultParameters, $parameters));
     }
 
     /**

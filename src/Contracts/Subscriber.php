@@ -33,7 +33,7 @@ abstract class Subscriber
      * Handling fail event
      *
      * @param VkRequest $request
-     * @param array $response
+     * @param array     $response
      */
     abstract public function onSuccess(VkRequest $request, array $response);
 
@@ -41,7 +41,7 @@ abstract class Subscriber
      * Handling success event
      *
      * @param VkRequest $request
-     * @param array $error
+     * @param array     $error
      */
     public function onFail(VkRequest $request, array $error)
     {
@@ -55,20 +55,15 @@ abstract class Subscriber
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(
-            sprintf(VkRequest::EVENT_FORMAT, VkRequest::STATUS_SUCCESS, $this->getApiMethod(), $this->tag),
-            static::class.'@onSuccess'
-        );
-        $events->listen(
-            sprintf(VkRequest::EVENT_FORMAT, VkRequest::STATUS_FAIL, $this->getApiMethod(), $this->tag),
-            static::class.'@onFail'
-        );
+        $events->listen(sprintf(VkRequest::EVENT_FORMAT, VkRequest::STATUS_SUCCESS, $this->getApiMethod(), $this->tag), static::class . '@onSuccess');
+        $events->listen(sprintf(VkRequest::EVENT_FORMAT, VkRequest::STATUS_FAIL, $this->getApiMethod(), $this->tag), static::class . '@onFail');
     }
 
     /**
      * Convert error to Exception object
      *
      * @param array $error
+     *
      * @return VkException
      */
     protected function toException(array $error)

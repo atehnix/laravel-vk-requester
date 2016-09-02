@@ -1,2 +1,8 @@
-vendor
 composer.lock
+/vendor
+/node_modules
+/nbproject
+/.idea
+.env
+_ide_helper.php
+.phpstorm.meta.php

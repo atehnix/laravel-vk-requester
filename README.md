@@ -2,33 +2,32 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/atehnix/laravel-vk-requester/master/LICENSE)
 [![Packagist Version](https://img.shields.io/packagist/v/atehnix/laravel-vk-requester.svg)](https://packagist.org/packages/atehnix/laravel-vk-requester)
 
-Пакет предоставляет удобный способ выполнения запросов к API социальной сети Vk.Сom.
+Пакет предоставляет удобный способ выполнения запросов к API социальной сети VK.
 
 Запросы выполняются в фоновом режиме, используя систему очередей Laravel.
-На каждый ответ от API генерируется событие, на которое можно подписаться, обработать/сохранить полученные данные и, при необходимости, добавить новые запросы.
+На каждый ответ от VK API генерируется событие, на которое можно подписаться, обработать, сохранить полученные данные и, при необходимости, добавить новые запросы.
 
 Благодаря такому подходу можно гибко выстраивать цепочки из нескольких взаимосвязанных запросов.
 
 #### Например:
 ```yaml
-    # Получить группы по списку ID
-    - groups.getByIds
+# Получить группы по списку ID
+- groups.getByIds
 
-            # Для каждой группы получить участников
-            - groups.getMembers
+# Для каждой группы получить участников
+- groups.getMembers
 
-                    # Каждого участника добавить себе в друзья
-                    - friends.add
+# Каждого участника добавить себе в друзья
+- friends.add
 
-            # Для каждой группы получить посты
-            - wall.get
+# Для каждой группы получить посты
+- wall.get
 
-                    # Для каждого поста получить комментарии
-                    - wall.getComments
-
+# Для каждого поста получить комментарии
+- wall.getComments
 ```
 
-А благодаря автоматическому оборачиванию запросов в ["execute-запросы"](https://vk.com/dev/execute) (по 25 в каждом), выполнение происходит в разы быстрее и понижается вероятность превышения лимитов Vk.Com на кол-во и частоту запросов.
+Благодаря автоматическому оборачиванию запросов в ["execute-запросы"](https://vk.com/dev/execute) (по 25 в каждом), выполнение происходит в значительно быстрее, снижая вероятность превышения лимитов на количество и частоту запросов к VK API.
 
 
 ## Установка
@@ -37,7 +36,7 @@
 composer require atehnix/laravel-vk-requester
 ```
 
-##### Добавить в массив `providers` в файле `config/app.php`:
+##### Добавить в блок `providers` файла `config/app.php`:
 ```php
 ATehnix\LaravelVkRequester\VkRequesterServiceProvider::class,
 ```
@@ -56,7 +55,6 @@ php artisan migrate
 
 ## Добавление запроса в очередь
 ```php
-<?php
 use ATehnix\LaravelVkRequester\Models\VkRequest;
 
 VkRequest::create([
@@ -66,20 +64,18 @@ VkRequest::create([
 ]);
 ```
 
-Раз в минуту (по Cron'у) из таблицы временного хранения все новые запросы переносятся в основную очередь Laravel.
+Раз в минуту (по Cron) из таблицы временного хранения все новые запросы переносятся в основную очередь Laravel.
 
-Для уменьшения кол-ва реальных обращений к API, все запросы будут автоматически обернуты в ["execute-запросы"](https://vk.com/dev/execute) по 25 в каждом.
+Для уменьшения количества реальных обращений к API, все запросы будут автоматически обернуты в ["execute-запросы"](https://vk.com/dev/execute) по 25 в каждом.
 
 
 ## Подписка на ответы API
-В качестве удобного способа подписки на ответы API рекомендуется использовать классы, наследованные от `ATehnix\LaravelVkRequester\Contracts\Subscriber`.
+В качестве удобного способа подписки на ответы API, рекомендуется использовать классы, наследованные от `ATehnix\LaravelVkRequester\Contracts\Subscriber`.
 
-Метод `onSuccess($request, $response)` будет вызываться при успешном выполнении запроса, а метод `onFail($request, $error)` при неудачном.
+Метод `onSuccess($request, $response)` будет вызываться при успешном выполнении запроса, а метод `onFail($request, $error)` - при неудачном.
 
 #### Пример:
 ```php
-<?php
-
 use ATehnix\LaravelVkRequester\Contracts\Subscriber;
 use ATehnix\LaravelVkRequester\Models\VkRequest;
 
@@ -104,8 +100,6 @@ class WallGetSubscriber extends Subscriber
 Все Subscriber'ы необходимо добавить в массив `$subscribe` провайдера `EventServiceProvider`.
 
 ```php
-<?php
-
 class EventServiceProvider extends ServiceProvider
 {
     protected $subscribe = [
@@ -132,7 +126,8 @@ vk-requester.fail: wall.get #default
 
 
 ## Контекст запросов
-По-умолчанию, в имени события присутствует тэг `#default`. При добавлении запроса вы можете в атрибуте `tag` указать любое другое значение тега. Тэг позволяет добавить запросам дополнительный "признак", когда требуется отличать их от других запросов с тем же методом. 
+По-умолчанию, в имени события присутствует тэг `#default`. При добавлении запроса вы можете в атрибуте `tag` указать любое другое значение тега. Тэг позволяет добавить запросам дополнительный "признак", когда требуется отличать их от других запросов с тем же методом.
+
 Кроме того, через атрибут запроса `context` можно передать массив с любыми дополнительными данными, которые вы сможете получить при обработке события (`$request->context`).
 
 ## Где взять API токен?
@@ -141,25 +136,39 @@ vk-requester.fail: wall.get #default
 
 ##### Добавьте в `config/services.php`:
 ```php
-<?php return [
+return [
     // ...
 
-    'vkontakte' => [
-        'client_id'     => env('VKONTAKTE_KEY'),
-        'client_secret' => env('VKONTAKTE_SECRET'),
-        'redirect'      => env('VKONTAKTE_REDIRECT_URI'),
+    'vk' => [
+        'client_id'     => env('VK_KEY'),
+        'client_secret' => env('VK_SECRET'),
+        'redirect'      => env('VK_REDIRECT_URI'),
     ],
 ];
 ```
 
 В файле `.env` укажите соответствующие параметры авторизации вашего [VK-приложения](https://vk.com/apps?act=manage).
+```ini
+VK_KEY=
+VK_SECRET=
+VK_REDIRECT_URI=
+VK_API_VERSION=5.53
+VK_SCOPE=offline,wall,group
+```
+
+где:
+
+    VK_KEY - идентификационный номер приложения
+    VK_SECRET - секретный ключ приложения
+    VK_REDIRECT_URI - адрес для редиректа при авторизации через oAuth VK API
+    VK_API_VERSION - используемая версия VK API
+    VK_SCOPE - требуемые права доступа
+
 
 ##### Пример получения токена
 ```php
-<?php
-
-Route::get('/vkauth', function (\ATehnix\VkClient\Auth $auth) {
-    echo "<a href='{$auth->getUrl()}'> Войти через VK.Com </a><hr>";
+Route::get('vkauth', function (\ATehnix\VkClient\Auth $auth) {
+    echo "<a href='{$auth->getUrl()}'>Войти через VK</a><hr>";
 
     if (\Request::exists('code')) {
         echo 'Token: '.$auth->getToken(\Request::get('code'));

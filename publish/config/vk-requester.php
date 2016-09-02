@@ -7,11 +7,11 @@ return [
     | API Version
     |--------------------------------------------------------------------------
     |
-    | Version Vkontakte API, which must be used in request.
+    | Version VK API, which must be used in request.
     |
     */
 
-    'version' => '5.53',
+    'version' => env('VK_API_VERSION', '5.53'),
 
     /*
     |--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ return [
     |
     */
 
-    'scope' => 'offline,wall',
+    'scope' => env('VK_SCOPE', 'offline,wall'),
 
     /*
     |--------------------------------------------------------------------------
