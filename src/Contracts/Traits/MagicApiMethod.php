@@ -26,10 +26,10 @@ trait MagicApiMethod
     protected function getApiMethod()
     {
         if (!isset($this->apiMethod)) {
-            $words = explode('_', Str::snake(class_basename($this)), -1);
-            $endpoint = strtolower(array_shift($words));
-            $action = Str::camel(implode('_', $words)) ?: '*';
-            $method = sprintf('%s.%s', $endpoint, $action);
+            $words           = explode('_', Str::snake(class_basename($this)), -1);
+            $endpoint        = strtolower(array_shift($words));
+            $action          = Str::camel(implode('_', $words)) ?: '*';
+            $method          = sprintf('%s.%s', $endpoint, $action);
             $this->apiMethod = $endpoint ? $method : 'undefined';
         }
 

@@ -139,20 +139,36 @@ vk-requester.fail: wall.get #default
 return [
     // ...
 
-    'vkontakte' => [
-        'client_id'     => env('VKONTAKTE_KEY'),
-        'client_secret' => env('VKONTAKTE_SECRET'),
-        'redirect'      => env('VKONTAKTE_REDIRECT_URI'),
+    'vk' => [
+        'client_id'     => env('VK_KEY'),
+        'client_secret' => env('VK_SECRET'),
+        'redirect'      => env('VK_REDIRECT_URI'),
     ],
 ];
 ```
 
 В файле `.env` укажите соответствующие параметры авторизации вашего [VK-приложения](https://vk.com/apps?act=manage).
+```ini
+VK_KEY=
+VK_SECRET=
+VK_REDIRECT_URI=
+VK_API_VERSION=5.53
+VK_SCOPE=offline,wall,group
+```
+
+где:
+
+    VK_KEY - идентификационный номер приложения
+    VK_SECRET - секретный ключ приложения
+    VK_REDIRECT_URI - адрес для редиректа при авторизации через oAuth VK API
+    VK_API_VERSION - используемая версия VK API
+    VK_SCOPE - требуемые права доступа
+
 
 ##### Пример получения токена
 ```php
-Route::get('/vkauth', function (\ATehnix\VkClient\Auth $auth) {
-    echo "<a href='{$auth->getUrl()}'> Войти через VK.Com </a><hr>";
+Route::get('vkauth', function (\ATehnix\VkClient\Auth $auth) {
+    echo "<a href='{$auth->getUrl()}'>Войти через VK</a><hr>";
 
     if (\Request::exists('code')) {
         echo 'Token: '.$auth->getToken(\Request::get('code'));

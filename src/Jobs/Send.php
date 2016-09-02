@@ -23,7 +23,7 @@ use Illuminate\Queue\SerializesModels;
 class Send implements ShouldQueue
 {
     use Queueable, InteractsWithQueue, SerializesModels;
-    
+
     /**
      * Default delay before sending request (in milliseconds)
      */
@@ -78,12 +78,12 @@ class Send implements ShouldQueue
     }
 
     /**
-     * Send request to Vk.com API
+     * Send request to VK API
      */
     protected function sendToApi()
     {
         usleep(config('vk-requester.delay', self::DEFAULT_DELAY) * 1000);
-        $clientRequest = new Request($this->request->method, $this->request->parameters);
+        $clientRequest  = new Request($this->request->method, $this->request->parameters);
         $clientResponse = $this->api->send($clientRequest);
         $this->response = $this->getResponse($clientResponse);
     }
@@ -92,6 +92,7 @@ class Send implements ShouldQueue
      * Get data array from response
      *
      * @param array $clientResponse
+     *
      * @return array
      */
     protected function getResponse(array $clientResponse)
@@ -109,7 +110,7 @@ class Send implements ShouldQueue
     private function fireEvent()
     {
         $status = isset($this->response['error_code']) ? VkRequest::STATUS_FAIL : VkRequest::STATUS_SUCCESS;
-        $event = sprintf(VkRequest::EVENT_FORMAT, $status, $this->request->method, $this->request->tag);
+        $event  = sprintf(VkRequest::EVENT_FORMAT, $status, $this->request->method, $this->request->tag);
         event($event, [$this->request, $this->response]);
     }
 }

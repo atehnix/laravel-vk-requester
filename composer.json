@@ -1,30 +1,30 @@
 {
-  "name": "atehnix/laravel-vk-requester",
-  "license": "MIT",
-  "description": "Laravel package for Vk.com API",
-  "keywords": [
-    "laravel",
-    "php",
-    "queue",
-    "api",
-    "client",
-    "vk",
-    "vk.com",
-    "vkontakte"
-  ],
-  "authors": [
-    {
-      "name": "ATehnix",
-      "email": "atehnix@gmail.com"
+    "name":        "atehnix/laravel-vk-requester",
+    "license":     "MIT",
+    "description": "Laravel package for VK API",
+    "keywords":    [
+        "laravel",
+        "php",
+        "queue",
+        "api",
+        "client",
+        "vk",
+        "vk.com",
+        "vkontakte"
+    ],
+    "authors":     [
+        {
+            "name":  "ATehnix",
+            "email": "atehnix@gmail.com"
+        }
+    ],
+    "require":     {
+        "php":               ">=5.5.9",
+        "atehnix/vk-client": "^1.0.0"
+    },
+    "autoload":    {
+        "psr-4": {
+            "ATehnix\\LaravelVkRequester\\": "src"
+        }
     }
-  ],
-  "require": {
-    "php": ">=5.5.9",
-    "atehnix/vk-client": "^1.0.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "ATehnix\\LaravelVkRequester\\": "src"
-    }
-  }
 }

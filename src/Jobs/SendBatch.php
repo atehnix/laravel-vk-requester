@@ -25,7 +25,7 @@ use Illuminate\Queue\SerializesModels;
 class SendBatch implements ShouldQueue
 {
     use Queueable, InteractsWithQueue, SerializesModels;
-    
+
     /**
      * Default delay before sending request (in milliseconds)
      */
@@ -63,12 +63,12 @@ class SendBatch implements ShouldQueue
      * Create a new job instance.
      *
      * @param Collection $requests
-     * @param string $token Access token for Vk.com API
+     * @param string     $token Access token for VK API
      */
     public function __construct(Collection $requests, $token)
     {
         $this->requests = $requests;
-        $this->token = (string)$token;
+        $this->token    = (string)$token;
         VkRequest::whereIn('id', $requests->pluck('id')->all())->delete();
     }
 
@@ -92,12 +92,12 @@ class SendBatch implements ShouldQueue
     }
 
     /**
-     * Send requests to Vk.com API
+     * Send requests to VK API
      */
     protected function sendToApi()
     {
         usleep(config('vk-requester.delay', self::DEFAULT_DELAY) * 1000);
-        $executeRequest = $this->makeExecuteRequest($this->requests);
+        $executeRequest  = $this->makeExecuteRequest($this->requests);
         $executeResponse = $this->api->send($executeRequest);
         $this->responses = $this->getResponses($executeResponse);
     }
@@ -106,6 +106,7 @@ class SendBatch implements ShouldQueue
      * Make a new "execute" request instanse with nested requests.
      *
      * @param Collection $requests
+     *
      * @return ExecuteRequest
      */
     protected function makeExecuteRequest(Collection $requests)
@@ -121,6 +122,7 @@ class SendBatch implements ShouldQueue
      * Get array of nested responses in "execute" response
      *
      * @param array $executeResponse
+     *
      * @return array
      */
     protected function getResponses(array $executeResponse)
@@ -143,7 +145,7 @@ class SendBatch implements ShouldQueue
     {
         array_map(function (VkRequest $request, $response) {
             $status = isset($response['error_code']) ? VkRequest::STATUS_FAIL : VkRequest::STATUS_SUCCESS;
-            $event = sprintf(VkRequest::EVENT_FORMAT, $status, $request->method, $request->tag);
+            $event  = sprintf(VkRequest::EVENT_FORMAT, $status, $request->method, $request->tag);
             event($event, [$request, $response]);
         }, $this->requests->all(), $this->responses);
     }
